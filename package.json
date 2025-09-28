@@ -1,0 +1,20 @@
+{
+  "name": "jobs-ejs",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/BlueSage96/jobs-ejs#readme",
+  "bugs": {
+    "url": "https://github.com/BlueSage96/jobs-ejs/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BlueSage96/jobs-ejs.git"
+  },
+  "license": "ISC",
+  "author": "brittany price",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  }
+}
