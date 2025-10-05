@@ -6,7 +6,7 @@ const app = express();
 
 app.set("view engine", "ejs");
 app.use(require("body-parser").urlencoded({ extended: true }));
-
+app.use(require("connect-flash")());
 const MongoDBStore = require("connect-mongodb-session")(session);
 const url = process.env.MONGO_URI;
 
@@ -44,7 +44,6 @@ app.get("/secretWord", (req, res) => {
   res.render("secretWord", { secretWord: req.session.secretWord });
 });
 
-app.use(require("connect-flash")());
 app.post("/secretWord", (req, res) => {
     if (req.body.secretWord.toUpperCase()[0] == "P") {
         req.flash("error", "That word won't work!");
