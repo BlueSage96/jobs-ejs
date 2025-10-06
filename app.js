@@ -6,7 +6,6 @@ const app = express();
 
 app.set("view engine", "ejs");
 app.use(require("body-parser").urlencoded({ extended: true }));
-app.use(require("connect-flash")());
 const MongoDBStore = require("connect-mongodb-session")(session);
 const url = process.env.MONGO_URI;
 
@@ -33,6 +32,14 @@ if (app.get("env") === "production") {
 }
 
 app.use(session(sessionParams));
+app.use(require("connect-flash")());
+app.use(require("./middleware/storeLocals"));
+
+app.get("/", (req, res) => {
+   res.render("index");
+});
+
+app.use("/sessions", require("./routes/sessionRoutes"));
 
 app.get("/secretWord", (req, res) => {
   if (!req.session.secretWord) {
