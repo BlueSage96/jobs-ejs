@@ -2,10 +2,13 @@ const express = require("express");
 const app = express();
 const passport = require("passport");
 const passportInit = require("./passport/passportInit");
+
 require("express-async-errors");
 require("dotenv").config();//loads .env file into process.env object
 const session = require("express-session");
 
+const secretWordRouter = require("./routes/secretWord");
+const auth = require("./middleware/auth");
 
 app.set("view engine", "ejs");
 app.use(require("body-parser").urlencoded({ extended: true }));
@@ -41,6 +44,7 @@ app.use(passport.session());
 
 app.use(require("connect-flash")());
 app.use(require("./middleware/storeLocals"));
+app.use("/secretWord", auth, secretWordRouter);
 
 app.get("/", (req, res) => {
    res.render("index");
