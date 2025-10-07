@@ -1,8 +1,11 @@
 const express = require("express");
+const app = express();
+const passport = require("passport");
+const passportInit = require("./passport/passportInit");
 require("express-async-errors");
 require("dotenv").config();//loads .env file into process.env object
 const session = require("express-session");
-const app = express();
+
 
 app.set("view engine", "ejs");
 app.use(require("body-parser").urlencoded({ extended: true }));
@@ -32,6 +35,10 @@ if (app.get("env") === "production") {
 }
 
 app.use(session(sessionParams));
+passportInit();
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(require("connect-flash")());
 app.use(require("./middleware/storeLocals"));
 
