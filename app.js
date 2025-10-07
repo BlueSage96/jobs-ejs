@@ -48,28 +48,6 @@ app.get("/", (req, res) => {
 
 app.use("/sessions", require("./routes/sessionRoutes"));
 
-app.get("/secretWord", (req, res) => {
-  if (!req.session.secretWord) {
-    // secret word handling
-    req.session.secretWord = "syzygy";
-  }
-  res.locals.info = req.flash("info");
-  res.locals.errors = req.flash("error");
-  res.render("secretWord", { secretWord: req.session.secretWord });
-});
-
-app.post("/secretWord", (req, res) => {
-    if (req.body.secretWord.toUpperCase()[0] == "P") {
-        req.flash("error", "That word won't work!");
-        req.flash("error", "You can't use words that start with p");
-    } else {
-       req.session.secretWord = req.body.secretWord; 
-       req.flash("info", "The secret word has changed.");
-    }
-  
-  res.redirect("/secretWord");
-});
-
 app.use((req, res) => {
   res.status(404).send(`That page (${req.url}) was not found.`);
 });
