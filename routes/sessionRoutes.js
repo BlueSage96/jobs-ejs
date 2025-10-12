@@ -13,7 +13,6 @@ router.route("/logon").get(logonShow).post(
     }),
     (req, res) => {
     res.render("logon", { csrfToken: req.csrfToken() });
-    res.send("Not yet implemented");
 });
 
 router.route("/logoff").post(logoff);

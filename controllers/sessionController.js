@@ -27,6 +27,7 @@ const registerDo = async(req, res, next) => {
 };
 
 const logoff = (req, res) => {
+    // caused csrf errors!!
     // res.render("logoff", { csrfToken: req.csrfToken() });
     req.session.destroy(function(err) {
         if (err) {

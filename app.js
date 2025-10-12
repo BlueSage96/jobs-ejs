@@ -1,3 +1,4 @@
+process.noDeprecation = true; //suppress deprecation warnings in console
 const express = require("express");
 const app = express();
 const passport = require("passport");
@@ -7,9 +8,8 @@ const cookieParser = require("cookie-parser");
 const csrf = require("csurf");
 const csrfMiddleware = csrf();
 
-
 require("express-async-errors");
-require("dotenv").config();//loads .env file into process.env object
+require("dotenv").config(); //loads .env file into process.env object
 const session = require("express-session");
 
 const secretWordRouter = require("./routes/secretWord");
@@ -56,7 +56,7 @@ app.use(require("./middleware/storeLocals"));
 app.use("/secretWord", auth, secretWordRouter);
 
 app.get("/", (req, res) => {
-   res.render("index", { csrfToken: req.csrfToken() });
+  res.render("index", { csrfToken: req.csrfToken() });
 });
 
 app.use("/sessions", require("./routes/sessionRoutes"));
@@ -74,7 +74,7 @@ const port = process.env.PORT || 3000;
 
 const start = async () => {
   try {
-    await require("./db/connect")(process.env.MONGO_URI)
+    await require("./db/connect")(process.env.MONGO_URI);
     app.listen(port, () =>
       console.log(`Server is listening on port ${port}...`)
     );
