@@ -4,8 +4,8 @@ const passport = require("passport");
 const passportInit = require("./passport/passportInit");
 
 const cookieParser = require("cookie-parser");
-const csrf = require("host-csrf");
-const csrfMiddleware = csrf.csrf();
+const csrf = require("csurf");
+const csrfMiddleware = csrf();
 
 
 require("express-async-errors");
@@ -56,7 +56,7 @@ app.use(require("./middleware/storeLocals"));
 app.use("/secretWord", auth, secretWordRouter);
 
 app.get("/", (req, res) => {
-   res.render("index");
+   res.render("index", { csrfToken: req.csrfToken() });
 });
 
 app.use("/sessions", require("./routes/sessionRoutes"));
