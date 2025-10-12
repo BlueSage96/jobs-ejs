@@ -15,6 +15,10 @@ const session = require("express-session");
 const secretWordRouter = require("./routes/secretWord");
 const auth = require("./middleware/auth");
 
+// routers
+// const authRouter = require("./routes/auth");
+const gameRouter = require("./routes/games");
+
 app.set("view engine", "ejs");
 app.use(require("body-parser").urlencoded({ extended: true }));
 
@@ -53,6 +57,9 @@ app.use(passport.session());
 
 app.use(require("connect-flash")());
 app.use(require("./middleware/storeLocals"));
+
+// app.use("/auth", authRouter);
+app.use("/games", auth, gameRouter);
 app.use("/secretWord", auth, secretWordRouter);
 
 app.get("/", (req, res) => {
