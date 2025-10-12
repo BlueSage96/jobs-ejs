@@ -3,6 +3,11 @@ const app = express();
 const passport = require("passport");
 const passportInit = require("./passport/passportInit");
 
+const cookieParser = require("cookie-parser");
+const csrf = require("host-csrf");
+const csrfMiddleware = csrf.csrf();
+
+
 require("express-async-errors");
 require("dotenv").config();//loads .env file into process.env object
 const session = require("express-session");
@@ -12,6 +17,7 @@ const auth = require("./middleware/auth");
 
 app.set("view engine", "ejs");
 app.use(require("body-parser").urlencoded({ extended: true }));
+
 const MongoDBStore = require("connect-mongodb-session")(session);
 const url = process.env.MONGO_URI;
 
@@ -38,6 +44,9 @@ if (app.get("env") === "production") {
 }
 
 app.use(session(sessionParams));
+app.use(cookieParser(process.env.SESSION_SECRET));
+app.use(csrfMiddleware);
+
 passportInit();
 app.use(passport.initialize());
 app.use(passport.session());
