@@ -1,0 +1,38 @@
+<%- include("partials/header.ejs") %>
+    <%- include("partials/footer.ejs") %>
+    <h2>Games List</h2>
+    <table id="Games-table">
+        <tr id="Games-table-header">
+            <th>Difficulty</th>
+            <th>Mistakes</th>
+            <th>Hints</th>
+            <th>Status</th>
+            <th colspan="2"></th>
+        </tr>
+        <% if (games && games.length) { %>
+            <% games.forEach((game)=> { %>
+                <tr>
+                    <td>
+                        <%= game.difficulty %>
+                    </td>
+                    <td>
+                        <%= game.mistakes %>
+                    </td>
+                    <td>
+                        <%= game.usedHints %>
+                    </td>
+                    <td>
+                        <%= game.status %>
+                    </td>
+                    <!-- <td><button type="button">edit</button></td>
+                    <td>button type="button">delete</button></td> -->
+                    <a href="/games/edit/<%= game.id %>">
+                        <button type="button">edit</button>
+                    </a>
+                    <a href="/games/delete/<%= game.id %>" action="/games/delete/<%= game.id %>">
+                        <button type="button">delete</button>
+                    </a>
+                </tr>
+                <% }) %>
+                    <% } %>
+    </table>
