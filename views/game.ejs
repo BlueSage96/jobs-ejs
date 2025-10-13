@@ -1,0 +1,51 @@
+<%- include("partials/header.ejs") %>
+    <%- include("partials/footer.ejs") %>
+        <h2>Games List</h2>
+        <table id="Games-table">
+            <tr id="Games-table-header">
+                <th>Difficulty</th>
+                <th>Mistakes</th>
+                <th>Hints</th>
+                <th>Status</th>
+                <th colspan="2"></th>
+            </tr>
+            <% if (games && games.length) { %>
+                <% games.forEach((game)=> { %>
+                    <tr>
+                        <form>
+                            <div>{" "}
+                                <label htmlFor="difficulty">Difficulty:</label>{" "}
+                                <input type="text" value={difficulty} />{" "}
+                            </div>
+                            <div>{" "}
+                                <label htmlFor="mistakes">Mistakes: </label>{" "}
+                                <input type="text" value={mistakes}/>{" "}
+                            </div>
+                            <div>
+                                <label htmlFor="hints">Hints:</label>
+                                <input type="text" value={hints}/>
+                            </div>
+                            <div>
+                                {" "}
+                                <label htmlFor="status">
+                                    Status:
+                                </label>{" "}
+                                <select>
+                                    <option value="Not started">Not started</option>
+                                    <option value="In progress">In progress</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Restarted">Restarted</option>
+                                </select>
+                            </div>
+                              <a href="/games/edit/<%= game.id %>">
+                            <button type="button">edit</button>
+                        </a>
+                        <a href="/games/delete/<%= game.id %>" action="/games/delete/<%= game.id %>">
+                            <button type="button">delete</button>
+                        </a>
+                        </form>
+                    </tr>
+
+                    <% }) %>
+                        <% } %>
+        </table>
