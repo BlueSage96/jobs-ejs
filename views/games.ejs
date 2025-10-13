@@ -24,14 +24,18 @@
                     <td>
                         <%= game.status %>
                     </td>
-                    <!-- <td><button type="button">edit</button></td>
-                    <td>button type="button">delete</button></td> -->
-                    <a href="/games/edit/<%= game.id %>">
+                    <td>
+                       <a href="/games/edit/<%= game.id %>">
                         <button type="button">edit</button>
-                    </a>
-                    <a href="/games/delete/<%= game.id %>" action="/games/delete/<%= game.id %>">
+                       </a>  
+                    </td>
+                   <!-- check hw example for delete -->
+                    <td>
+                      <a href="/games/delete/<%= game.id %>">
                         <button type="button">delete</button>
-                    </a>
+                      </a> 
+                    </td>
+                   
                 </tr>
                 <% }) %>
                     <% } %>
