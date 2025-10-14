@@ -13,10 +13,10 @@ const createGame = async (req, res) => {
    res.render("game", { game: null });
 };
 
-const getAllGames = async (req, res) => {
-   const games = await Game.find({createdBy: req.user._id}).sort('createdAt');
-   res.status(StatusCodes.OK).json({games, count: games.length});
-};
+// const getAllGames = async (req, res) => {
+//    const games = await Game.find({createdBy: req.user._id}).sort('createdAt');
+//    res.status(StatusCodes.OK).json({games, count: games.length});
+// };
 
 const getAGame = async (req, res) => {
   // get specific game by game & user Id
@@ -29,22 +29,23 @@ const getAGame = async (req, res) => {
 };
 
 const updateGame = async (req, res) => {
-    const { body: {difficulty, mistakes, usedHints, status}, params: { id: gameId }} = req;
+    const { user: {_id: userId}, body: {difficulty, mistakes, usedHints, status}, params: { id: gameId }} = req;
     // require all params to update
     if (difficulty === '' || mistakes === '' || usedHints === '' || status === '') {
        req.flash("error",'Difficulty, mistakes, usedHints, and status fields cannot be empty!');
     }
-    const game = await Game.findOneAndUpdate({_id: gameId, createdBy: req.user._id}, req.body, {new: true, runValidators: true});
+    const game = await Game.findOne({_id: gameId, createdBy: userId}, req.body, {new: true, runValidators: true});
      if (!game) {
       req.flash("error",`No game with id ${gameId}`);
-     } else {
-       res.status(StatusCodes.OK).json({ game });
-     }
+      return res.redirect("/games");
+     } 
 
-     res.render("game", { game })
+     res.render("game", { game, csrfToken: req.csrfToken() });
 };
 
+
 const deleteGame = async (req, res) => {
+  // const { params: { id: gameId }}
     const { id: gameId } = req;
     const game = await Game.findOneAndDelete({ _id: gameId, createdBy: req.user._id });
     if (!game) {
@@ -53,4 +54,4 @@ const deleteGame = async (req, res) => {
     res.status(StatusCodes.OK).json({ game, msg: "The entry was deleted" });
 };
 
-module.exports = { gameShow, getAllGames, getAGame, createGame, updateGame, deleteGame };
+module.exports = { gameShow, getAGame, createGame, updateGame, deleteGame };

@@ -25,17 +25,17 @@
                         <%= game.status %>
                     </td>
                     <td>
-                       <a href="/games/edit/<%= game.id %>">
+                       <a href="/games/edit/<%= game._id %>">
                         <button type="button">edit</button>
                        </a>  
                     </td>
-                   <!-- check hw example for delete -->
+
                     <td>
-                      <a href="/games/delete/<%= game.id %>">
-                        <button type="button">delete</button>
-                      </a> 
+                       <form method="POST" action="/games/delete/<%= game._id %>" style="display: inline">
+                            <button type="button">delete</button>
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                      </form>
                     </td>
-                   
                 </tr>
                 <% }) %>
                     <% } %>

@@ -1,28 +1,28 @@
 <%- include("partials/header.ejs") %>
     <%- include("partials/footer.ejs") %>
-    <!-- change title can use ternary -->
+
         <h2>Games List</h2>
-        <!-- post & action (like delete) use game variable!! -->
+        
         <form>
-            <!-- conditional for game vs input -->
+    
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <div>{" "}
-                <label htmlFor="difficulty">Difficulty:</label>{" "}
-                <input type="text" value={difficulty} />{" "}
+            <div>
+                <label htmlFor="difficulty">Difficulty:</label>
+                <input type="text" placeholder="Easy, Medium, Hard, Extreme"/>
             </div>
-            <div>{" "}
-                <label htmlFor="mistakes">Mistakes: </label>{" "}
-                <input type="text" value={mistakes}/>{" "}
+            <div>
+                <label htmlFor="mistakes">Mistakes: </label>
+                <input type="text"/>
             </div>
             <div>
                 <label htmlFor="hints">Hints:</label>
-                <input type="text" value={hints}/>
+                <input type="text"/>
             </div>
             <div>
-                {" "}
+                
                 <label htmlFor="status">
                     Status:
-                </label>{" "}
+                </label>
                 <select>
                     <option value="Not started">Not started</option>
                     <option value="In progress">In progress</option>
@@ -31,13 +31,17 @@
                 </select>
             </div>
             <td>
-                <a href="/games/create/<%= game.id %>" action="/games/delete/<%= game.id %>">
+                <form method="PATCH" action="/games/delete/<%= game._id %>">
+                    <a>
                     <button type="button">add</button>
                 </a>
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                </form>
+                
             </td>
 
             <td>
-                <a href="/games/edit/<%= game.id %>">
+                <a href="/games/edit/<%= game._id %>">
                 <button type="button">edit</button>
                 </a>
             </td>
