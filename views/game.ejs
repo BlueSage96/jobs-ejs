@@ -31,11 +31,10 @@
                 </select>
             </div>
             <td>
-                <form method="PATCH" action="/games/delete/<%= game._id %>">
-                    <a>
+                <form method="PATCH" action="/games/create/<%= game._id %>">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                     <button type="button">add</button>
-                </a>
-                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+             
                 </form>
                 
             </td>
