@@ -11,7 +11,7 @@ const GameSchema = new mongoose.Schema(
     difficulty: {
       type: String,
       enum: ["Easy", "Medium", "Hard", "Extreme"],
-      default: "easy",
+      default: "Easy",
       index: true,
     },
     mistakes: {

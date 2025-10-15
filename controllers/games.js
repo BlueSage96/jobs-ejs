@@ -8,9 +8,17 @@ const { StatusCodes } = require('http-status-codes');
   };
 
 const createGame = async (req, res) => {
-   req.body.createdBy = req.user._id;
-   await Game.create(req.body);
-   res.render("game", { game: null });
+  try {
+    req.body.createdBy = req.user._id;
+    await Game.create(req.body);
+    // after creating, go back to the list
+    req.flash("success", "Game created");
+    return res.redirect("/games");
+  } catch (err) {
+    req.flash("error", "Failed to create game");
+    console.error(err);
+    return res.redirect("/games");
+  }
 };
 
 const getAGame = async (req, res) => {
