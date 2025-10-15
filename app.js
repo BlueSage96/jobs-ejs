@@ -8,6 +8,10 @@ const cookieParser = require("cookie-parser");
 const csrf = require("csurf");
 const csrfMiddleware = csrf();
 
+const xss = require('xss-clean');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+
 require("express-async-errors");
 require("dotenv").config(); //loads .env file into process.env object
 const session = require("express-session");
@@ -55,6 +59,15 @@ app.use(passport.session());
 
 app.use(require("connect-flash")());
 app.use(require("./middleware/storeLocals"));
+
+app.use(xss());
+app.use(helmet());
+app.use(
+  rateLimit({
+     windowMs: 15 * 60 * 1000,
+     max: 100
+  })
+)
 
 app.use("/games", auth, gameRouter);
 app.use("/secretWord", auth, secretWordRouter);
