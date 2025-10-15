@@ -9,14 +9,9 @@ const { StatusCodes } = require('http-status-codes');
 
 const createGame = async (req, res) => {
    req.body.createdBy = req.user._id;
-   const game = await Game.create(req.body);
+   await Game.create(req.body);
    res.render("game", { game: null });
 };
-
-// const getAllGames = async (req, res) => {
-//    const games = await Game.find({createdBy: req.user._id}).sort('createdAt');
-//    res.status(StatusCodes.OK).json({games, count: games.length});
-// };
 
 const getAGame = async (req, res) => {
   // get specific game by game & user Id
@@ -29,20 +24,19 @@ const getAGame = async (req, res) => {
 };
 
 const updateGame = async (req, res) => {
-    const { user: {_id: userId}, body: {difficulty, mistakes, usedHints, status}, params: { id: gameId }} = req;
+    const gameId = req.params.id;
+    const {difficulty, mistakes, usedHints, status} = req.body;
     // require all params to update
     if (difficulty === '' || mistakes === '' || usedHints === '' || status === '') {
        req.flash("error",'Difficulty, mistakes, usedHints, and status fields cannot be empty!');
     }
-    const game = await Game.findOne({_id: gameId, createdBy: userId}, req.body, {new: true, runValidators: true});
+    const game = await Game.findOneAndUpdate({_id: gameId, createdBy: req.user._id}, req.body, {new: true, runValidators: true});
      if (!game) {
       req.flash("error",`No game with id ${gameId}`);
       return res.redirect("/games");
      } 
-
-     res.render("game", { game, csrfToken: req.csrfToken() });
+     return res.redirect("/games");
 };
-
 
 const deleteGame = async (req, res) => {
   // const { params: { id: gameId }}
@@ -54,4 +48,12 @@ const deleteGame = async (req, res) => {
     res.status(StatusCodes.OK).json({ game, msg: "The entry was deleted" });
 };
 
-module.exports = { gameShow, getAGame, createGame, updateGame, deleteGame };
+const gameForm = async (req, res) => {
+   const gameId = req.params.id;
+   const game = await Game.findOne({ _id: gameId, createdBy: req.user._id});
+   if (!game) {
+      req.flash("error", `No game with id ${gameId}`)
+   }
+   return res.render("game", { game, csrfToken: req.csrfToken() })
+}
+module.exports = { gameShow, getAGame, createGame, updateGame, deleteGame, gameForm };

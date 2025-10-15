@@ -4,7 +4,6 @@
         <h2>Games List</h2>
         
         <form>
-    
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <div>
                 <label htmlFor="difficulty">Difficulty:</label>
@@ -24,24 +23,61 @@
                     Status:
                 </label>
                 <select>
-                    <option value="Not started">Not started</option>
-                    <option value="In progress">In progress</option>
-                    <option value="Completed">Completed</option>
-                    <option value="Restarted">Restarted</option>
+                    <option>Not started</option>
+                    <option>In progress</option>
+                    <option>Completed</option>
+                    <option>Restarted</option>
                 </select>
             </div>
-            <td>
-                <form method="PATCH" action="/games/create/<%= game._id %>">
+            <div>
+                <td>
+                <form method="POST" action="/games/create/<%= game._id %>">
                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                    <button type="button">add</button>
+                    <button type="submit">Add</button>
              
                 </form>
                 
             </td>
 
-            <td>
-                <a href="/games/edit/<%= game._id %>">
-                <button type="button">edit</button>
+            <!-- <td>
+                <a href="/games/update/<%= game._id %>">
+                <button type="submit">Update</button>
                 </a>
-            </td>
+            </td>    -->
+            </div>
+         
         </form>
+
+        <% if (game) { %>
+            <!-- UPDATE form -->
+            <form method="POST" action="/games/update/<%= game._id %>">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        
+                <div>
+                    <label for="difficulty-update">Difficulty:</label>
+                    <input id="difficulty-update" name="difficulty"/>
+                </div>
+        
+                <div>
+                    <label for="mistakes-update">Mistakes:</label>
+                    <input id="mistakes-update" name="mistakes" />
+                </div>
+        
+                <div>
+                    <label for="usedHints-update">Hints:</label>
+                    <input id="usedHints-update" name="usedHints"/>
+                </div>
+        
+                <div>
+                    <label for="status-update">Status:</label>
+                    <select id="status-update" name="status">
+                        <option>Not started</option>
+                        <option>In progress</option>
+                        <option>Completed</option>
+                        <option>Restarted</option>
+                    </select>
+                </div>
+        
+                <button type="submit">Update</button>
+            </form>
+            <% } %>
