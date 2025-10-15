@@ -2,8 +2,6 @@
     <%- include("partials/footer.ejs") %>
 
         <h2>Games List</h2>
-
-        <!-- ADD form -->
         <form method="POST" action="/games/create">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
@@ -36,23 +34,22 @@
         </form>
 
         <% if (game) { %>
-            <!-- UPDATE form -->
             <form method="POST" action="/games/update/<%= game._id %>">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
                 <div>
                     <label for="difficulty-update">Difficulty:</label>
-                    <input id="difficulty-update" name="difficulty" value="<%= game.difficulty %>" />
+                    <input id="difficulty-update" name="difficulty"/>
                 </div>
 
                 <div>
                     <label for="mistakes-update">Mistakes:</label>
-                    <input id="mistakes-update" name="mistakes" value="<%= game.mistakes %>" />
+                    <input id="mistakes-update" name="mistakes"/>
                 </div>
 
                 <div>
                     <label for="usedHints-update">Hints:</label>
-                    <input id="usedHints-update" name="usedHints" value="<%= game.usedHints %>" />
+                    <input id="usedHints-update" name="usedHints"/>
                 </div>
 
                 <div>
@@ -67,4 +64,4 @@
 
                 <button type="submit">Update</button>
             </form>
-            <% } %>
+        <% } %>

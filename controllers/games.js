@@ -47,7 +47,6 @@ const updateGame = async (req, res) => {
 };
 
 const deleteGame = async (req, res) => {
-  // const { params: { id: gameId }}
     const { _id: gameId } = req;
     const game = await Game.findOneAndDelete({ _id: req.params.id, createdBy: req.user._id });
     if (!game) {

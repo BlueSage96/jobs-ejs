@@ -16,7 +16,6 @@ const secretWordRouter = require("./routes/secretWord");
 const auth = require("./middleware/auth");
 
 // routers
-// const authRouter = require("./routes/auth");
 const gameRouter = require("./routes/games");
 
 app.set("view engine", "ejs");
@@ -26,7 +25,6 @@ const MongoDBStore = require("connect-mongodb-session")(session);
 const url = process.env.MONGO_URI;
 
 const store = new MongoDBStore({
-  // may throw an error, which won't be caught
   uri: url,
   collection: "mySessions",
 });
@@ -58,7 +56,6 @@ app.use(passport.session());
 app.use(require("connect-flash")());
 app.use(require("./middleware/storeLocals"));
 
-// app.use("/auth", authRouter);
 app.use("/games", auth, gameRouter);
 app.use("/secretWord", auth, secretWordRouter);
 
