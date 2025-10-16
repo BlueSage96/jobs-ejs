@@ -1,0 +1,67 @@
+<%- include("partials/header.ejs") %>
+    <%- include("partials/footer.ejs") %>
+
+        <h2>Games List</h2>
+        <form method="POST" action="/games/create">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+            <div>
+                <label for="difficulty-add">Difficulty:</label>
+                <input id="difficulty-add" name="difficulty" value="" placeholder="Easy, Medium, Hard" />
+            </div>
+
+            <div>
+                <label for="mistakes-add">Mistakes:</label>
+                <input id="mistakes-add" name="mistakes" value="" />
+            </div>
+
+            <div>
+                <label for="usedHints-add">Hints:</label>
+                <input id="usedHints-add" name="usedHints" value="" />
+            </div>
+
+            <div>
+                <label for="status-add">Status:</label>
+                <select id="status-add" name="status">
+                    <option value="Not started">Not started</option>
+                    <option value="In progress">In progress</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Restarted">Restarted</option>
+                </select>
+            </div>
+
+            <button type="submit">Add</button>
+        </form>
+
+        <% if (game) { %>
+            <form method="POST" action="/games/update/<%= game._id %>">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+                <div>
+                    <label for="difficulty-update">Difficulty:</label>
+                    <input id="difficulty-update" name="difficulty"/>
+                </div>
+
+                <div>
+                    <label for="mistakes-update">Mistakes:</label>
+                    <input id="mistakes-update" name="mistakes"/>
+                </div>
+
+                <div>
+                    <label for="usedHints-update">Hints:</label>
+                    <input id="usedHints-update" name="usedHints"/>
+                </div>
+
+                <div>
+                    <label for="status-update">Status:</label>
+                    <select id="status-update" name="status">
+                        <option>Not started</option>
+                        <option>In progress</option>
+                        <option>Completed</option>
+                        <option>Restarted</option>
+                    </select>
+                </div>
+
+                <button type="submit">Update</button>
+            </form>
+        <% } %>

@@ -4,6 +4,7 @@ const passport = require("passport");
 
 const { logonShow, registerShow, registerDo, logoff } = require("../controllers/sessionController");
 router.route("/register").get(registerShow).post(registerDo);
+
 router.route("/logon").get(logonShow).post(
     passport.authenticate("local", {
         successRedirect: "/",
@@ -11,7 +12,7 @@ router.route("/logon").get(logonShow).post(
         failureFlash: true,
     }),
     (req, res) => {
-    res.send("Not yet implemented");
+    res.render("logon", { csrfToken: req.csrfToken() });
 });
 
 router.route("/logoff").post(logoff);
