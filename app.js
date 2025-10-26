@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const passport = require("passport");
 const passportInit = require("./passport/passportInit");
+let mongoURL = process.env.MONGO_URI;
 
 const cookieParser = require("cookie-parser");
 const csrf = require("csurf");
@@ -25,8 +26,9 @@ const gameRouter = require("./routes/games");
 app.set("view engine", "ejs");
 app.use(require("body-parser").urlencoded({ extended: true }));
 
+if (process.env.NODE_ENV == "test") mongoURL = process.env.MONGO_URI_TEST;
+
 const MongoDBStore = require("connect-mongodb-session")(session);
-const url = process.env.MONGO_URI;
 
 const store = new MongoDBStore({
   uri: url,
@@ -91,7 +93,7 @@ const port = process.env.PORT || 3000;
 
 const start = async () => {
   try {
-    await require("./db/connect")(process.env.MONGO_URI);
+    await require("./db/connect")(mongoURL);
     app.listen(port, () =>
       console.log(`Server is listening on port ${port}...`)
     );
