@@ -15,7 +15,8 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "test": "NODE_ENV=test mocha test/tests/**/*.js --timeout 5000 --exit"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
@@ -38,8 +39,8 @@
     "xss-clean": "^0.1.4"
   },
   "devDependencies": {
-    "@faker-js/faker": "^10.1.0",
-    "chai": "^6.2.0",
+    "@faker-js/faker": "^9.9.0",
+    "chai": "^5.3.3",
     "chai-http": "^5.1.2",
     "eslint": "^9.36.0",
     "factory-bot": "^6.3.1",
