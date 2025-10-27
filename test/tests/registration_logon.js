@@ -2,8 +2,8 @@ const { app } = require("../../app");
 const { factory, seed_db } = require("../util/seed_db");
 const faker = require("@faker-js/faker").fakerEN_US;
 const get_chai = require("../util/get_chai");
-
 const User = require("../../models/User");
+const { StatusCodes } = require("http-status-codes");
 
 describe("tests for registration and logon", function () {
   // after(() => {
@@ -13,7 +13,7 @@ describe("tests for registration and logon", function () {
     const { expect, request } = await get_chai();
     const req = request.execute(app).get("/sessions/register").send();
     const res = await req;
-    expect(res).to.have.status(200);
+    expect(res).to.have.status(StatusCodes.OK);
     expect(res).to.have.property("text");
     expect(res.text).to.include("Enter your name");
 
@@ -48,7 +48,7 @@ describe("tests for registration and logon", function () {
       .set("content-type", "application/x-www-form-urlencoded")
       .send(dataToPost);
     const res = await req;
-    expect(res).to.have.status(200);
+    expect(res).to.have.status(StatusCodes.OK);
     expect(res).to.have.property("text");
     expect(res.text).to.include("Games List");
     newUser = await User.findOne({ email: this.user.email });
@@ -70,7 +70,7 @@ describe("tests for registration and logon", function () {
        .redirects(0)
        .send(dataToPost);
      const res = await req;
-     expect(res).to.have.status(302);
+     expect(res).to.have.status(StatusCodes.MOVED_TEMPORARILY);
      expect(res.headers.location).to.equal("/");
      const cookies = res.headers["set-cookie"];
      this.sessionCookie = cookies.find((element) => element.startsWith("connect.sid"));
@@ -86,7 +86,7 @@ describe("tests for registration and logon", function () {
        .set("Cookie", this.sessionCookie)
        .send();
      const res = await req;
-     expect(res).to.have.status(200);
+     expect(res).to.have.status(StatusCodes.OK);
      expect(res).to.have.property("text");
      expect(res.text).to.include(this.user.name);
    });

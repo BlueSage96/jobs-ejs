@@ -1,5 +1,6 @@
 const { app } = require("../../app");
 const get_chai = require("../util/get_chai");
+const { StatusCodes } = require("http-status-codes");
 
 describe("test getting a page", function () {
   it("should get the index page", async () => {
@@ -7,7 +8,7 @@ describe("test getting a page", function () {
     const req = request.execute(app).get("/").send();
     const res = await req;
 
-    expect(res).to.have.status(200);
+    expect(res).to.have.status(StatusCodes.OK);
     expect(res).to.have.property("text");
     expect(res.text).to.include("Click this link");
   });

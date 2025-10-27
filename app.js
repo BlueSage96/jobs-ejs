@@ -15,6 +15,7 @@ const csrfMiddleware = csrf({ cookie: true });
 const xss = require('xss-clean');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const { StatusCodes } = require("http-status-codes");
 
 require("express-async-errors");
 
@@ -95,11 +96,11 @@ app.get("/", csrfMiddleware, (req, res) => {
 app.use("/sessions", require("./routes/sessionRoutes"));
 
 app.use((req, res) => {
-  res.status(404).send(`That page (${req.mongoURL}) was not found.`);
+  res.status(StatusCodes.NOT_FOUND).send(`That page (${req.mongoURL}) was not found.`);
 });
 
 app.use((err, req, res, next) => {
-  res.status(500).send(err.message);
+  res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(err.message);
   console.log(err);
 });
 
