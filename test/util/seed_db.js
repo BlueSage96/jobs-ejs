@@ -1,7 +1,7 @@
 const Game = require("../../models/Game");
 const User = require("../../models/User");
 const faker = require("@faker-js/faker").fakerEN_US;
-const FactoryBot = require("factory-bot");
+const FactoryBot = require("@eflexsystems/factory-bot");
 require("dotenv").config();
 
 const testUserPassword = faker.internet.password();
@@ -15,7 +15,7 @@ factory.define("game", Game, {
   mistakes: () => faker.mistakes.numMistakes(),
   hints: () => faker.usedHints.numHints(),
   status: () =>
-    ["Not started", "In progress", "Completed", "Restarted"][Math.floor(3 * Math.random())], // random one of these
+    ["Not started", "In progress", "Completed", "Restarted"][Math.floor(3 * Math.random())] // random one of these
 });
 
 factory.define("user", User, {

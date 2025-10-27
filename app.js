@@ -2,20 +2,21 @@ require("dotenv").config(); //loads .env file into process.env object
 process.noDeprecation = true; //suppress deprecation warnings in console
 const express = require("express");
 const app = express();
+const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
+
 const passport = require("passport");
 const passportInit = require("./passport/passportInit");
-let mongoURL = process.env.MONGO_URI;
 
 const cookieParser = require("cookie-parser");
 const csrf = require("csurf");
-const csrfMiddleware = csrf();
+const csrfMiddleware = csrf({ cookie: true });
 
 const xss = require('xss-clean');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
 require("express-async-errors");
-const session = require("express-session");
 
 const secretWordRouter = require("./routes/secretWord");
 const auth = require("./middleware/auth");
@@ -26,13 +27,14 @@ const gameRouter = require("./routes/games");
 app.set("view engine", "ejs");
 app.use(require("body-parser").urlencoded({ extended: true }));
 
-const MongoDBStore = require("connect-mongodb-session")(session);
+let mongoURL = process.env.MONGO_URI;
 if (process.env.NODE_ENV == "test") mongoURL = process.env.MONGO_URI_TEST;
 
 const store = new MongoDBStore({
   uri: mongoURL,
   collection: "mySessions",
 });
+
 store.on("error", function (error) {
   console.log(error);
 });
@@ -50,8 +52,8 @@ if (app.get("env") === "production") {
   sessionParams.cookie.secure = true; // serve secure cookies
 }
 
+app.use(cookieParser(process.env.SESSION_SECRET || "testsecret"));
 app.use(session(sessionParams));
-app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(csrfMiddleware);
 
 passportInit();
@@ -70,8 +72,6 @@ app.use(
   })
 )
 
-if (process.env.NODE_ENV == "test") mongoURL = process.env.MONGO_URI_TEST;
-
 app.get("/multiply", (req, res) => {
     const result = req.query.first * req.query.second;
     if (result.isNaN) result = "NaN";
@@ -88,14 +88,14 @@ app.use((req, res, next) => {
 app.use("/games", auth, gameRouter);
 app.use("/secretWord", auth, secretWordRouter);
 
-app.get("/", (req, res) => {
+app.get("/", csrfMiddleware, (req, res) => {
   res.render("index", { csrfToken: req.csrfToken() });
 });
 
-app.use("/sessions", require("./routes/sessionRoutes"));
+app.use("/ ", require("./routes/sessionRoutes"));
 
 app.use((req, res) => {
-  res.status(404).send(`That page (${req.mongURL}) was not found.`);
+  res.status(404).send(`That page (${req.mongoURL}) was not found.`);
 });
 
 app.use((err, req, res, next) => {

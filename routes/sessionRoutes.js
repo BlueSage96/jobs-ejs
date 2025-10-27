@@ -8,7 +8,7 @@ router.route("/register").get(registerShow).post(registerDo);
 router.route("/logon").get(logonShow).post(
     passport.authenticate("local", {
         successRedirect: "/",
-        failureRedirect: "/sessions/logon",
+        failureRedirect: "/session/logon",
         failureFlash: true,
     }),
     (req, res) => {
