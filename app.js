@@ -1,3 +1,4 @@
+require("dotenv").config(); //loads .env file into process.env object
 process.noDeprecation = true; //suppress deprecation warnings in console
 const express = require("express");
 const app = express();
@@ -14,7 +15,6 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
 require("express-async-errors");
-require("dotenv").config(); //loads .env file into process.env object
 const session = require("express-session");
 
 const secretWordRouter = require("./routes/secretWord");
@@ -26,12 +26,11 @@ const gameRouter = require("./routes/games");
 app.set("view engine", "ejs");
 app.use(require("body-parser").urlencoded({ extended: true }));
 
+const MongoDBStore = require("connect-mongodb-session")(session);
 if (process.env.NODE_ENV == "test") mongoURL = process.env.MONGO_URI_TEST;
 
-const MongoDBStore = require("connect-mongodb-session")(session);
-
 const store = new MongoDBStore({
-  uri: url,
+  uri: mongoURL,
   collection: "mySessions",
 });
 store.on("error", function (error) {
@@ -71,6 +70,21 @@ app.use(
   })
 )
 
+if (process.env.NODE_ENV == "test") mongoURL = process.env.MONGO_URI_TEST;
+
+app.get("/multiply", (req, res) => {
+    const result = req.query.first * req.query.second;
+    if (result.isNaN) result = "NaN";
+    else if (result == null) result = "null";
+    res.json({ result: result });
+});
+
+app.use((req, res, next) => {
+    if (req.path == "/multiply") res.set("Content-Type", "application/json");
+    else res.set("Content-Type", "text/html");
+    next();
+});
+
 app.use("/games", auth, gameRouter);
 app.use("/secretWord", auth, secretWordRouter);
 
@@ -81,7 +95,7 @@ app.get("/", (req, res) => {
 app.use("/sessions", require("./routes/sessionRoutes"));
 
 app.use((req, res) => {
-  res.status(404).send(`That page (${req.url}) was not found.`);
+  res.status(404).send(`That page (${req.mongURL}) was not found.`);
 });
 
 app.use((err, req, res, next) => {
@@ -91,10 +105,10 @@ app.use((err, req, res, next) => {
 
 const port = process.env.PORT || 3000;
 
-const start = async () => {
+const start = () => {
   try {
-    await require("./db/connect")(mongoURL);
-    app.listen(port, () =>
+    require("./db/connect")(mongoURL);
+    return app.listen(port, () =>
       console.log(`Server is listening on port ${port}...`)
     );
   } catch (error) {
@@ -103,3 +117,5 @@ const start = async () => {
 };
 
 start();
+
+module.exports = { app };
