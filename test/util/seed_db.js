@@ -15,7 +15,8 @@ factory.define("game", Game, {
   mistakes: () => faker.mistakes.numMistakes(),
   hints: () => faker.usedHints.numHints(),
   status: () =>
-    ["Not started", "In progress", "Completed", "Restarted"][Math.floor(3 * Math.random())] // random one of these
+    ["Not started", "In progress", "Completed", "Restarted"][
+      Math.floor(3 * Math.random())], // random one of these
 });
 
 factory.define("user", User, {

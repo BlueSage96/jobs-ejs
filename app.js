@@ -92,7 +92,7 @@ app.get("/", csrfMiddleware, (req, res) => {
   res.render("index", { csrfToken: req.csrfToken() });
 });
 
-app.use("/ ", require("./routes/sessionRoutes"));
+app.use("/sessions", require("./routes/sessionRoutes"));
 
 app.use((req, res) => {
   res.status(404).send(`That page (${req.mongoURL}) was not found.`);
