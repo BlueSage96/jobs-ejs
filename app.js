@@ -1,5 +1,5 @@
 require("dotenv").config(); //loads .env file into process.env object
-process.noDeprecation = true; //suppress deprecation warnings in console
+
 const express = require("express");
 const app = express();
 const session = require("express-session");
@@ -86,7 +86,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use("/games", auth, gameRouter);
+app.use("/games", auth, csrfMiddleware, gameRouter);
 app.use("/secretWord", auth, secretWordRouter);
 
 app.get("/", csrfMiddleware, (req, res) => {

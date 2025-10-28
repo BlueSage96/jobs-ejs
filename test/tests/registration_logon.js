@@ -73,7 +73,9 @@ describe("tests for registration and logon", function () {
      expect(res).to.have.status(StatusCodes.MOVED_TEMPORARILY);
      expect(res.headers.location).to.equal("/");
      const cookies = res.headers["set-cookie"];
-     this.sessionCookie = cookies.find((element) => element.startsWith("connect.sid"));
+     this.sessionCookie = cookies.find((element) =>
+       element.startsWith("connect.sid")
+     );
      expect(this.sessionCookie).to.not.be.undefined;
    });
 
