@@ -49,7 +49,7 @@ describe("testing CRUD operations", function () {
 
      expect(res).to.have.status(StatusCodes.OK);
      const pageParts = res.text.split("<tr>");
-      pageParts = await factory.createMany("game", 21, { createdBy: this.test_user._id });
+     pageParts = await factory.createMany("game", 21, { createdBy: this.test_user._id });
      expect(pageParts).to.equal(21);
      const games = await Game.find({ createdBy: this.test_user._id });
      expect(games.length).to.equal(21);
