@@ -1,4 +1,5 @@
 require("dotenv").config(); //loads .env file into process.env object
+process.noDeprecation = true;//suppress deprecation warnings in console
 
 const express = require("express");
 const app = express();

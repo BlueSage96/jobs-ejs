@@ -64,21 +64,32 @@ describe("games-ejs puppeteer test", function () {
   });
 
   describe("puppeteer game operations", function () {
-    this.timeout(1000000);
+      this.timeout(1000000);
 
-    it("should click on link in games list", async () => {
-        const { expect } = await import("chai");
-        this.gamesPage = await page.waitForSelector('a[href="/games/"]');
+      it("should click on link in games list", async () => {
+         const { expect } = await import("chai");
+         this.gamesPage = await page.waitForSelector('a[href="/games/"]');
+         await this.gamesPage.click();
+         await page.waitForNavigation();
+         const gameEntries = await page.content();
+         expect(gameEntries.split("<tr>").length).to.equal(21);
+      });
+
+      it("should test click on Add button", async () => {
+        this.difficulty = await page.waitForSelector('input[name="difficulty"]');
+        this.mistakes = await page.waitForSelector('input[name="mistakes"]');
+        this.usedHints = await page.waitForSelector('input[name="usedHints"]');
+        this.status = await page.waitForSelector('select[name="status"]');
+
+        // fill them with valid data BEFORE submit
+        await this.difficulty.type("Easy");
+        await this.mistakes.type("0");
+        await this.usedHints.type("0");
+        await this.status.select("Not started");
+
+        this.gamesPage = await page.waitForSelector("button ::-p-text(Add)");
         await this.gamesPage.click();
         await page.waitForNavigation();
-        const gameEntries = await page.content();
-        expect(gameEntries.split("<tr>").length).to.equal(21);
-    });
-    /* 
-        (test2) Have the test click on the "Add A Job" button and to 
-        wait for the form to come up. Verify that it is the expected 
-        form, and resolve the company and position fields and add button.
-    */
-    
+      });
   });
 });
