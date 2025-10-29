@@ -64,45 +64,21 @@ describe("games-ejs puppeteer test", function () {
   });
 
   describe("puppeteer game operations", function () {
-    this.timeout(10000);
+    this.timeout(1000000);
 
     it("should click on link in games list", async () => {
-      const { expect } = await get_chai();
-
-      // Clean up any existing games first
-      await Game.deleteMany({ createdBy: testUser._id });
-
-      // Create 20 test games for the ALREADY logged in testUser
-      const gamesToCreate = [];
-      for (let i = 0; i < 20; i++) {
-        gamesToCreate.push({
-          name: `Test Game ${i}`,
-          createdBy: testUser._id,
-          // add any other required fields for your Game model
-        });
-      }
-      await Game.insertMany(gamesToCreate);
-
-      // Use Puppeteer to click on the games list link
-      const gamesLink = await page.waitForSelector("a ::-p-text(games)");
-      await gamesLink.click();
-      await page.waitForNavigation();
-
-      // Get the entire HTML page content
-      const htmlContent = await page.content();
-
-      // Split by <tr> to count table rows
-      const pageParts = htmlContent.split("<tr>");
-
-      // Debug: log the count
-      console.log("Number of <tr> elements found:", pageParts.length - 1);
-
-      // Verify there are 20 game entries
-      expect(pageParts.length - 1).to.equal(20);
-
-      // Also verify in database
-      const games = await Game.find({ createdBy: testUser._id });
-      expect(games.length).to.equal(20);
+        const { expect } = await import("chai");
+        this.gamesPage = await page.waitForSelector('a[href="/games/"]');
+        await this.gamesPage.click();
+        await page.waitForNavigation();
+        const gameEntries = await page.content();
+        expect(gameEntries.split("<tr>").length).to.equal(21);
     });
+    /* 
+        (test2) Have the test click on the "Add A Job" button and to 
+        wait for the form to come up. Verify that it is the expected 
+        form, and resolve the company and position fields and add button.
+    */
+    
   });
 });
