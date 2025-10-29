@@ -1,4 +1,4 @@
-require("dotenv").config(); //loads .env file into process.env object
+require("dotenv").config(); 
 process.noDeprecation = true;//suppress deprecation warnings in console
 
 const express = require("express");
@@ -70,7 +70,7 @@ app.use(helmet());
 app.use(
   rateLimit({
      windowMs: 15 * 60 * 1000,
-     max: 10000
+     max: 100
   })
 )
 
