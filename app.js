@@ -1,20 +1,24 @@
-process.noDeprecation = true; //suppress deprecation warnings in console
+require("dotenv").config(); 
+process.noDeprecation = true;//suppress deprecation warnings in console
+
 const express = require("express");
 const app = express();
+const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
+
 const passport = require("passport");
 const passportInit = require("./passport/passportInit");
 
 const cookieParser = require("cookie-parser");
 const csrf = require("csurf");
-const csrfMiddleware = csrf();
+const csrfMiddleware = csrf({ cookie: true });
 
 const xss = require('xss-clean');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const { StatusCodes } = require("http-status-codes");
 
 require("express-async-errors");
-require("dotenv").config(); //loads .env file into process.env object
-const session = require("express-session");
 
 const secretWordRouter = require("./routes/secretWord");
 const auth = require("./middleware/auth");
@@ -25,13 +29,14 @@ const gameRouter = require("./routes/games");
 app.set("view engine", "ejs");
 app.use(require("body-parser").urlencoded({ extended: true }));
 
-const MongoDBStore = require("connect-mongodb-session")(session);
-const url = process.env.MONGO_URI;
+let mongoURL = process.env.MONGO_URI;
+if (process.env.NODE_ENV == "test") mongoURL = process.env.MONGO_URI_TEST;
 
 const store = new MongoDBStore({
-  uri: url,
+  uri: mongoURL,
   collection: "mySessions",
 });
+
 store.on("error", function (error) {
   console.log(error);
 });
@@ -49,8 +54,8 @@ if (app.get("env") === "production") {
   sessionParams.cookie.secure = true; // serve secure cookies
 }
 
+app.use(cookieParser(process.env.SESSION_SECRET || "testsecret"));
 app.use(session(sessionParams));
-app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(csrfMiddleware);
 
 passportInit();
@@ -69,30 +74,43 @@ app.use(
   })
 )
 
-app.use("/games", auth, gameRouter);
+app.get("/multiply", (req, res) => {
+    const result = req.query.first * req.query.second;
+    if (result.isNaN) result = "NaN";
+    else if (result == null) result = "null";
+    res.json({ result: result });
+});
+
+app.use((req, res, next) => {
+    if (req.path == "/multiply") res.set("Content-Type", "application/json");
+    else res.set("Content-Type", "text/html");
+    next();
+});
+
+app.use("/games", auth, csrfMiddleware, gameRouter);
 app.use("/secretWord", auth, secretWordRouter);
 
-app.get("/", (req, res) => {
+app.get("/", csrfMiddleware, (req, res) => {
   res.render("index", { csrfToken: req.csrfToken() });
 });
 
 app.use("/sessions", require("./routes/sessionRoutes"));
 
 app.use((req, res) => {
-  res.status(404).send(`That page (${req.url}) was not found.`);
+  res.status(StatusCodes.NOT_FOUND).send(`That page (${req.mongoURL}) was not found.`);
 });
 
 app.use((err, req, res, next) => {
-  res.status(500).send(err.message);
+  res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(err.message);
   console.log(err);
 });
 
 const port = process.env.PORT || 3000;
 
-const start = async () => {
+const start = () => {
   try {
-    await require("./db/connect")(process.env.MONGO_URI);
-    app.listen(port, () =>
+    require("./db/connect")(mongoURL);
+    return app.listen(port, () =>
       console.log(`Server is listening on port ${port}...`)
     );
   } catch (error) {
@@ -101,3 +119,5 @@ const start = async () => {
 };
 
 start();
+
+module.exports = { app };
