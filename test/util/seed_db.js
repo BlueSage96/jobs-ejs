@@ -11,10 +11,14 @@ const factoryAdapter = new FactoryBot.MongooseAdapter();
 factory.setAdapter(factoryAdapter);
 
 factory.define("game", Game, {
-  difficulty: () => ["Easy", "Medium", "Hard", "Extreme"][Math.floor(Math.random() * 4)],
+  difficulty: () =>
+    ["Easy", "Medium", "Hard", "Extreme"][Math.floor(Math.random() * 4)],
   mistakes: () => faker.number.int({ min: 0, max: 5 }),
   hints: () => faker.number.int({ min: 0, max: 5 }),
-  status: () => ["Not started", "In progress", "Completed", "Restarted"][Math.floor(Math.random() * 4)]
+  status: () =>
+    ["Not started", "In progress", "Completed", "Restarted"][
+      Math.floor(Math.random() * 4)
+    ],
 });
 
 factory.define("user", User, {
@@ -23,7 +27,7 @@ factory.define("user", User, {
   password: () => faker.internet.password(),
 });
 
-const seed_db = async () => {
+const seed_db = async function () {
   let testUser = null;
   try {
     const mongoURL = process.env.MONGO_URI_TEST;
