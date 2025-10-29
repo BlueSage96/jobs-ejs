@@ -40,3 +40,34 @@
                 <% }) %>
                     <% } %>
     </table>
+    <br/>
+        <form method="POST" action="/games/create">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        
+            <div>
+                <label for="difficulty-add">Difficulty:</label>
+                <input id="difficulty-add" name="difficulty" value="" placeholder="Easy, Medium, Hard, Extreme" />
+            </div>
+        
+            <div>
+                <label for="mistakes-add">Mistakes:</label>
+                <input id="mistakes-add" name="mistakes" value=""  placeholder="i.e. 0, 1, etc."/>
+            </div>
+        
+            <div>
+                <label for="usedHints-add">Hints:</label>
+                <input id="usedHints-add" name="usedHints" value="" placeholder="i.e. 0, 1, etc."/>
+            </div>
+        
+            <div>
+                <label for="status-add">Status:</label>
+                <select id="status-add" name="status">
+                    <option value="Not started">Not started</option>
+                    <option value="In progress">In progress</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Restarted">Restarted</option>
+                </select>
+            </div>
+        
+            <button type="submit">Add</button>
+        </form>
