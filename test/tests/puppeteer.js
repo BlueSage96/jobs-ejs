@@ -29,12 +29,12 @@ describe("games-ejs puppeteer test", function () {
 
   describe("index page test", function () {
     this.timeout(10000);
-    it("finds the index page logon link", async () => {
+    it("finds the index page logon link", async function () {
       this.logonLink = await page.waitForSelector(
         "a ::-p-text(Click this link to logon)"
       );
     });
-    it("gets to the logon page", async () => {
+    it("gets to the logon page", async function () {
       await this.logonLink.click();
       await page.waitForNavigation();
       const email = await page.waitForSelector('input[name="email"]');
@@ -43,12 +43,12 @@ describe("games-ejs puppeteer test", function () {
 
   describe("logon page test", function () {
     this.timeout(20000);
-    it("resolves all the fields", async () => {
+    it("resolves all the fields", async function () {
       this.email = await page.waitForSelector('input[name="email"]');
       this.password = await page.waitForSelector('input[name="password"]');
       this.submit = await page.waitForSelector("button ::-p-text(Logon)");
     });
-    it("sends the logon", async () => {
+    it("sends the logon", async function () {
       testUser = await seed_db();
       await this.email.type(testUser.email);
       await this.password.type(testUserPassword);
@@ -66,7 +66,7 @@ describe("games-ejs puppeteer test", function () {
   describe("puppeteer game operations", function () {
     this.timeout(1000000);
 
-    it("should click on link in games list", async () => {
+    it("should click on link in games list", async function () {
       const { expect } = await import("chai");
       this.gamesPage = await page.waitForSelector('a[href="/games/"]');
       await this.gamesPage.click();
@@ -75,7 +75,7 @@ describe("games-ejs puppeteer test", function () {
       expect(gameEntries.split("<tr>").length).to.equal(21);
     });
 
-    it("should test click on Add button", async () => {
+    it("should test click on Add button", async function () {
       this.difficulty = await page.waitForSelector('input[name="difficulty"]');
       this.mistakes = await page.waitForSelector('input[name="mistakes"]');
       this.usedHints = await page.waitForSelector('input[name="usedHints"]');
@@ -124,8 +124,8 @@ describe("games-ejs puppeteer test", function () {
     //     const games = Game.find({ createdBy: testUser._id });
     //     expect(games.length).to.equal(21);
     //   });
- 
-    // it("add a game for logged in user", async () => {
+
+    // it("add a game for logged in user", async function () {
     //   const newGame = await factory.build("game");
     //   const { expect } = await import("chai");
 
@@ -160,7 +160,7 @@ describe("games-ejs puppeteer test", function () {
     //   const games = await Game.find({ createdBy: testUser._id });
     //   expect(games.length).to.equal(21);
     // });
-    it("add a game for logged in user", async () => {
+    it("add a game for logged in user", async function () {
       const newGame = await factory.build("game");
       const { expect } = await import("chai");
 
@@ -202,5 +202,5 @@ describe("games-ejs puppeteer test", function () {
       const games = await Game.find({ createdBy: testUser._id });
       expect(games.length).to.be.greaterThan(0);
     });
-   });
+  });
 });

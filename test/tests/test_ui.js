@@ -3,7 +3,7 @@ const get_chai = require("../util/get_chai");
 const { StatusCodes } = require("http-status-codes");
 
 describe("test getting a page", function () {
-  it("should get the index page", async () => {
+  it("should get the index page", async function () {
     const { expect, request } = await get_chai();
     const req = request.execute(app).get("/").send();
     const res = await req;
