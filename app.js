@@ -25,7 +25,7 @@ const secretWordRouter = require("./routes/secretWord");
 const auth = require("./middleware/auth");
 
 // routers
-const gameRouter = require("./routes/games");
+const gameRouter = require("./routes/gamesRoute");
 const MongoDBStore = require("connect-mongodb-session")(session);
 
 const store = new MongoDBStore({
@@ -91,7 +91,7 @@ app.use((err, req, res, next) => {
   console.log(err);
 });
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 3000;
 
 const start = async () => {
   try {

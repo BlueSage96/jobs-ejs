@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { gameShow, createGame, updateGame, deleteGame, gameForm } = require('../controllers/games');
+const { gameShow, createGame, updateGame, deleteGame, gameForm } = require('../controllers/gamesController');
 router.route('/').get(gameShow);
 router.route('/create').post(createGame);
 router.route('/edit/:id').get(gameForm);
