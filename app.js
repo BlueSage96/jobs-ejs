@@ -14,6 +14,8 @@ const sessionRoutes = require("./routes/sessionRoutes");
 const sessionSecret = process.env.SESSION_SECRET;
 const url = process.env.MONGO_URI;
 
+const flash = require("connect-flash");
+const locals = require("./middleware/storeLocals");
 const xss = require("xss-clean");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
@@ -24,10 +26,6 @@ const auth = require("./middleware/auth");
 
 // routers
 const gameRouter = require("./routes/games");
-
-app.set("view engine", "ejs");
-app.use(require("body-parser").urlencoded({ extended: true }));
-
 const MongoDBStore = require("connect-mongodb-session")(session);
 
 const store = new MongoDBStore({
@@ -51,16 +49,17 @@ if (app.get("env") === "production") {
   sessionParams.cookie.secure = true; // serve secure cookies
 }
 
-app.use(session(sessionParams));
 app.use(cookieParser(sessionSecret));
-app.use(csrfMiddleware);
-
+app.use(session(sessionParams));
 passportInit();
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(require("body-parser").urlencoded({ extended: true }));
+app.use(flash());
+app.use(csrfMiddleware);
+app.use(locals);
 
-app.use(require("connect-flash")());
-app.use(require("./middleware/storeLocals"));
+app.set("view engine", "ejs");
 
 app.use(xss());
 app.use(helmet());
