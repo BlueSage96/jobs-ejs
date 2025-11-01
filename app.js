@@ -1,3 +1,4 @@
+require("dotenv").config(); //loads .env file into process.env object
 process.noDeprecation = true; //suppress deprecation warnings in console
 const express = require("express");
 const app = express();
@@ -8,14 +9,16 @@ const cookieParser = require("cookie-parser");
 const csrf = require("csurf");
 const csrfMiddleware = csrf();
 
-const xss = require('xss-clean');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
+const session = require("express-session");
+const sessionRoutes = require("./routes/sessionRoutes");
+const sessionSecret = process.env.SESSION_SECRET;
+const url = process.env.MONGO_URI;
+
+const xss = require("xss-clean");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 
 require("express-async-errors");
-require("dotenv").config(); //loads .env file into process.env object
-const session = require("express-session");
-
 const secretWordRouter = require("./routes/secretWord");
 const auth = require("./middleware/auth");
 
@@ -26,7 +29,6 @@ app.set("view engine", "ejs");
 app.use(require("body-parser").urlencoded({ extended: true }));
 
 const MongoDBStore = require("connect-mongodb-session")(session);
-const url = process.env.MONGO_URI;
 
 const store = new MongoDBStore({
   uri: url,
@@ -50,7 +52,7 @@ if (app.get("env") === "production") {
 }
 
 app.use(session(sessionParams));
-app.use(cookieParser(process.env.SESSION_SECRET));
+app.use(cookieParser(sessionSecret));
 app.use(csrfMiddleware);
 
 passportInit();
@@ -64,10 +66,10 @@ app.use(xss());
 app.use(helmet());
 app.use(
   rateLimit({
-     windowMs: 15 * 60 * 1000,
-     max: 100
+    windowMs: 15 * 60 * 1000,
+    max: 100,
   })
-)
+);
 
 app.use("/games", auth, gameRouter);
 app.use("/secretWord", auth, secretWordRouter);
@@ -76,18 +78,21 @@ app.get("/", (req, res) => {
   res.render("index", { csrfToken: req.csrfToken() });
 });
 
-app.use("/sessions", require("./routes/sessionRoutes"));
+app.use("/sessions", sessionRoutes);
 
 app.use((req, res) => {
   res.status(404).send(`That page (${req.url}) was not found.`);
 });
 
 app.use((err, req, res, next) => {
+  if (res.headersSent) {
+    return next(err);
+  }
   res.status(500).send(err.message);
   console.log(err);
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 const start = async () => {
   try {
