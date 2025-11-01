@@ -11,7 +11,7 @@
     "url": "git+https://github.com/BlueSage96/jobs-ejs.git"
   },
   "license": "ISC",
-  "author": "brittany price",
+  "author": "Brittany Price",
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
