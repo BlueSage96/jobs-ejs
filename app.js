@@ -1,5 +1,5 @@
 require("dotenv").config(); //loads .env file into process.env object
-process.noDeprecation = true;//suppress deprecation warnings in console
+process.noDeprecation = true; //suppress deprecation warnings in console
 
 const express = require("express");
 const app = express();
@@ -13,9 +13,9 @@ const cookieParser = require("cookie-parser");
 const csrf = require("csurf");
 const csrfMiddleware = csrf({ cookie: true });
 
-const xss = require('xss-clean');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
+const xss = require("xss-clean");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 const { StatusCodes } = require("http-status-codes");
 
 require("express-async-errors");
@@ -69,22 +69,22 @@ app.use(xss());
 app.use(helmet());
 app.use(
   rateLimit({
-     windowMs: 15 * 60 * 1000,
-     max: 10000
+    windowMs: 15 * 60 * 1000,
+    max: 10000,
   })
-)
+);
 
 app.get("/multiply", (req, res) => {
-    const result = req.query.first * req.query.second;
-    if (result.isNaN) result = "NaN";
-    else if (result == null) result = "null";
-    res.json({ result: result });
+  const result = req.query.first * req.query.second;
+  if (result.isNaN) result = "NaN";
+  else if (result == null) result = "null";
+  res.json({ result: result });
 });
 
 app.use((req, res, next) => {
-    if (req.path == "/multiply") res.set("Content-Type", "application/json");
-    else res.set("Content-Type", "text/html");
-    next();
+  if (req.path == "/multiply") res.set("Content-Type", "application/json");
+  else res.set("Content-Type", "text/html");
+  next();
 });
 
 app.use("/games", auth, csrfMiddleware, gameRouter);
@@ -97,7 +97,9 @@ app.get("/", csrfMiddleware, (req, res) => {
 app.use("/sessions", require("./routes/sessionRoutes"));
 
 app.use((req, res) => {
-  res.status(StatusCodes.NOT_FOUND).send(`That page (${req.mongoURL}) was not found.`);
+  res
+    .status(StatusCodes.NOT_FOUND)
+    .send(`That page (${req.mongoURL}) was not found.`);
 });
 
 app.use((err, req, res, next) => {
@@ -105,7 +107,7 @@ app.use((err, req, res, next) => {
   console.log(err);
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8000;
 
 const start = () => {
   try {

@@ -15,11 +15,11 @@ describe("games-ejs puppeteer test", function () {
     this.timeout(10000);
     browser = await puppeteer.launch();
     page = await browser.newPage();
-    await page.goto("http://localhost:3000");
+    await page.goto("http://localhost:8000");
   });
 
   after(async function () {
-    this.timeout(5000);
+    this.timeout(6000000);
     await browser.close();
   });
 
@@ -92,74 +92,6 @@ describe("games-ejs puppeteer test", function () {
       await page.waitForNavigation();
     });
 
-    //     const newGame = await factory.build("game");
-    //     const { expect } = await import("chai");
-
-    //     //grab fresh handles for the inputs on the current page
-    //     const getDifficulty = await page.waitForSelector(
-    //       'input[name="difficulty"]'
-    //     );
-    //     const getMistakes = await page.waitForSelector(
-    //       'input[name="mistakes"]'
-    //     );
-    //     const getUsedHints = await page.waitForSelector(
-    //       'input[name="usedHints"]'
-    //     );
-    //     const getStatus = await page.waitForSelector('select[name="status"]');
-
-    //     await getDifficulty.type(newGame.difficulty);
-    //     await getMistakes.type(newGame.mistakes);
-    //     await getUsedHints.type(newGame.usedHints);
-    //     await getStatus.select('select[name="status"]');
-
-    //     // click the Add button and wait for navigation
-    //     const addButton = await page.waitForSelector("button ::-p-text(Add)");
-
-    //     await Promise.all([addButton.click(), page.waitForNavigation()]);
-
-    //     await page.waitForSelector('div ::-p-text("Game created")');
-
-    //     const gameEntries = await page.content();
-    //     expect(gameEntries.split("<tr>").length).to.equal(22);
-    //     const games = Game.find({ createdBy: testUser._id });
-    //     expect(games.length).to.equal(21);
-    //   });
-
-    // it("add a game for logged in user", async function () {
-    //   const newGame = await factory.build("game");
-    //   const { expect } = await import("chai");
-
-    //   // get fresh handles to the form fields
-    //   const difficultyInput = await page.waitForSelector(
-    //     'input[name="difficulty"]'
-    //   );
-    //   const mistakesInput = await page.waitForSelector(
-    //     'input[name="mistakes"]'
-    //   );
-    //   const usedHintsInput = await page.waitForSelector(
-    //     'input[name="usedHints"]'
-    //   );
-    //   const statusSelect = await page.waitForSelector('select[name="status"]');
-
-    //   // fill them
-    //   await difficultyInput.type(newGame.difficulty || "Easy");
-    //   await mistakesInput.type(String(newGame.mistakes ?? 0));
-    //   await usedHintsInput.type(String(newGame.usedHints ?? 0));
-    //   await statusSelect.select(newGame.status || "Not started");
-
-    //   // submit and wait for redirect back to /games
-    //   const addButton = await page.waitForSelector("button ::-p-text(Add)");
-    //   await Promise.all([addButton.click(), page.waitForNavigation()]);
-
-    //   // instead of waiting for the flash text,
-    //   // just read the page and count rows
-    //   const gameEntries = await page.content();
-    //   expect(gameEntries.split("<tr>").length).to.equal(22);
-
-    //   // confirm DB count for this user
-    //   const games = await Game.find({ createdBy: testUser._id });
-    //   expect(games.length).to.equal(21);
-    // });
     it("add a game for logged in user", async function () {
       const newGame = await factory.build("game");
       const { expect } = await import("chai");
