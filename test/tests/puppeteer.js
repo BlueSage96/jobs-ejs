@@ -2,8 +2,6 @@ const puppeteer = require("puppeteer");
 require("../../app");
 const { factory, seed_db, testUserPassword } = require("../util/seed_db");
 const Game = require("../../models/Game");
-const { app } = require("../../app");
-const get_chai = require("../util/get_chai");
 
 let testUser = null;
 
@@ -101,15 +99,9 @@ describe("games-ejs puppeteer test", function () {
       let beforeCount = beforeHtml.split("<tr>").length;
 
       // get fresh handles to the form fields
-      const difficultyInput = await page.waitForSelector(
-        'input[name="difficulty"]'
-      );
-      const mistakesInput = await page.waitForSelector(
-        'input[name="mistakes"]'
-      );
-      const usedHintsInput = await page.waitForSelector(
-        'input[name="usedHints"]'
-      );
+      const difficultyInput = await page.waitForSelector('input[name="difficulty"]');
+      const mistakesInput = await page.waitForSelector('input[name="mistakes"]');
+      const usedHintsInput = await page.waitForSelector('input[name="usedHints"]');
       const statusSelect = await page.waitForSelector('select[name="status"]');
 
       // fill them
